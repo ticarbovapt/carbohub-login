@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CARBO Hub — Escolha sua área</title>
+  <meta name="description" content="Um hub único para operar, vender e escalar. Ecossistema Grupo Carbo." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f0fdf4;
+      --bg2: #ffffff;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text2: #475569;
+      --text3: #94a3b8;
+      --pill-bg: rgba(255,255,255,0.7);
+      --pill-border: #e2e8f0;
+      --shadow: 0 4px 24px rgba(0,0,0,0.07);
+      --shadow-hover: 0 16px 48px rgba(0,0,0,0.13);
+      --green: #22c55e;
+      --blue: #3b82f6;
+      --transition: 0.22s cubic-bezier(.4,0,.2,1);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0a0f1a;
+      --bg2: #111827;
+      --card: #1e293b;
+      --border: #334155;
+      --text: #f1f5f9;
+      --text2: #94a3b8;
+      --text3: #64748b;
+      --pill-bg: rgba(30,41,59,0.8);
+      --pill-border: #334155;
+      --shadow: 0 4px 24px rgba(0,0,0,0.4);
+      --shadow-hover: 0 16px 48px rgba(0,0,0,0.6);
+    }
+
+    html, body {
+      min-height: 100vh;
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background var(--transition), color var(--transition);
+    }
+
+    /* ── Particles ── */
+    #particles { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0;
+      animation: float linear infinite;
+    }
+    @keyframes float {
+      0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+      10%  { opacity: 0.35; }
+      90%  { opacity: 0.15; }
+      100% { transform: translateY(-10vh) scale(1.1); opacity: 0; }
+    }
+
+    /* ── Layout ── */
+    .page {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 2rem 1rem;
+      gap: 0;
+    }
+
+    /* ── Theme toggle ── */
+    #theme-btn {
+      position: fixed; top: 1rem; right: 1rem;
+      width: 2.5rem; height: 2.5rem;
+      border-radius: 50%; border: 1.5px solid var(--border);
+      background: var(--card); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background var(--transition), border var(--transition), transform 0.18s;
+      z-index: 100; box-shadow: var(--shadow);
+    }
+    #theme-btn:hover { transform: scale(1.1); }
+    #theme-btn svg { width: 1.1rem; height: 1.1rem; stroke: var(--text2); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ── Header ── */
+    .header { text-align: center; margin-bottom: 2.5rem; }
+
+    .logo-wrap {
+      display: inline-block; margin-bottom: 1.5rem;
+      animation: pop 0.7s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    .logo-wrap img { height: 9rem; width: auto; filter: drop-shadow(0 8px 24px rgba(34,197,94,0.25)); }
+    @keyframes pop {
+      from { transform: scale(0.5); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    .title-row {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      font-size: clamp(1.75rem, 5vw, 2.5rem);
+      font-weight: 800; letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      animation: slide-up 0.55s 0.25s both;
+    }
+    .zap-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 2.5rem; height: 2.5rem; border-radius: 0.65rem;
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      box-shadow: 0 4px 16px rgba(34,197,94,0.35);
+      flex-shrink: 0;
+    }
+    .zap-badge svg { width: 1.2rem; height: 1.2rem; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    .subtitle {
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text3);
+      margin-bottom: 0.75rem;
+      animation: slide-up 0.55s 0.32s both;
+    }
+    .tagline {
+      font-size: 1rem; color: var(--text2); margin-bottom: 1.75rem;
+      animation: slide-up 0.55s 0.38s both;
+    }
+
+    @keyframes slide-up {
+      from { transform: translateY(20px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    /* ── Stats pill ── */
+    .stats {
+      display: inline-flex; align-items: center; gap: 1.5rem;
+      padding: 0.65rem 1.5rem; border-radius: 999px;
+      background: var(--pill-bg); border: 1.5px solid var(--pill-border);
+      backdrop-filter: blur(8px);
+      animation: slide-up 0.55s 0.44s both;
+    }
+    .stat { text-align: center; }
+    .stat-value { display: block; font-size: 1.1rem; font-weight: 900; color: var(--text); }
+    .stat-label { display: block; font-size: 0.6rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text3); }
+    .stat-sep { width: 1px; height: 1.25rem; background: var(--border); }
+
+    /* ── Cards ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      width: 100%; max-width: 960px;
+      margin-bottom: 2.5rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 1.25rem;
+      padding: 2rem 1.75rem;
+      cursor: pointer;
+      text-decoration: none; color: inherit;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      box-shadow: var(--shadow);
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+      position: relative; overflow: hidden;
+      animation: slide-up 0.55s both;
+    }
+    .card:nth-child(1) { animation-delay: 0.52s; }
+    .card:nth-child(2) { animation-delay: 0.60s; }
+    .card:nth-child(3) { animation-delay: 0.68s; }
+
+    .card:hover {
+      transform: translateY(-5px) scale(1.015);
+      border-color: transparent;
+    }
+    .card:active { transform: translateY(-2px) scale(1.008); }
+
+    /* Hover glow per card */
+    .card-ops:hover    { box-shadow: 0 20px 60px rgba(59,130,246,0.22); }
+    .card-lic:hover    { box-shadow: 0 20px 60px rgba(34,197,94,0.22); }
+    .card-pdv:hover    { box-shadow: 0 20px 60px rgba(245,158,11,0.22); }
+
+    /* Ripple */
+    .ripple {
+      position: absolute; border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      transform: scale(0); pointer-events: none;
+      animation: ripple 0.55s ease-out forwards;
+    }
+    @keyframes ripple {
+      to { transform: scale(4); opacity: 0; }
+    }
+
+    .icon-box {
+      width: 4rem; height: 4rem; border-radius: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.25rem;
+      transition: transform 0.22s, rotate 0.22s;
+    }
+    .card:hover .icon-box { transform: scale(1.1) rotate(4deg); }
+    .icon-box svg { width: 2rem; height: 2rem; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    .icon-ops { background: linear-gradient(135deg, #3b82f6, #1d4ed8); box-shadow: 0 6px 20px rgba(59,130,246,0.35); }
+    .icon-lic { background: linear-gradient(135deg, #22c55e, #059669); box-shadow: 0 6px 20px rgba(34,197,94,0.35); }
+    .icon-pdv { background: linear-gradient(135deg, #f59e0b, #ea580c); box-shadow: 0 6px 20px rgba(245,158,11,0.35); }
+
+    .card-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 0.25rem; }
+    .card-sub { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text3); margin-bottom: 0.75rem; }
+    .card-desc { font-size: 0.9rem; color: var(--text2); line-height: 1.5; flex: 1; }
+
+    .card-cta {
+      margin-top: 1.25rem;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.85rem; font-weight: 700;
+      opacity: 0; transform: translateY(6px);
+      transition: opacity 0.2s, transform 0.2s;
+      padding: 0.4rem 1rem; border-radius: 999px;
+    }
+    .card:hover .card-cta { opacity: 1; transform: translateY(0); }
+    .cta-ops { color: #3b82f6; background: rgba(59,130,246,0.1); }
+    .cta-lic { color: #22c55e; background: rgba(34,197,94,0.1); }
+    .cta-pdv { color: #f59e0b; background: rgba(245,158,11,0.1); }
+    .card-cta svg { width: 0.9rem; height: 0.9rem; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; animation: arrow-pulse 1.2s ease-in-out infinite; }
+    @keyframes arrow-pulse { 0%,100%{transform:translateX(0)} 50%{transform:translateX(3px)} }
+
+    /* ── Footer ── */
+    footer {
+      color: var(--text3); font-size: 0.85rem;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      animation: slide-up 0.55s 0.9s both;
+    }
+    footer svg { width: 1rem; height: 1rem; stroke: var(--green); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; animation: spin 18s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .logo-wrap img { height: 6rem; }
+      .cards { grid-template-columns: 1fr; max-width: 380px; }
+      .stats { gap: 1rem; padding: 0.5rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Particles -->
+<div id="particles"></div>
+
+<!-- Theme toggle -->
+<button id="theme-btn" aria-label="Alternar tema" onclick="toggleTheme()">
+  <svg id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  <svg id="icon-sun"  viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+
+<div class="page">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo-wrap">
+      <img src="assets/logo.png" alt="Grupo Carbo" />
+    </div>
+
+    <div class="title-row">
+      CARBO Hub
+      <span class="zap-badge">
+        <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </span>
+    </div>
+
+    <p class="subtitle">Um hub único para operar, vender e escalar.</p>
+    <p class="tagline">Escolha o ambiente que deseja acessar</p>
+
+    <div class="stats">
+      <div class="stat"><span class="stat-value" data-target="3">0</span><span class="stat-label">Áreas</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><span class="stat-value" data-target="12">0</span><span class="stat-label">Módulos</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><span class="stat-value" data-target="99">0</span><span class="stat-label">Uptime %</span></div>
+    </div>
+  </header>
+
+  <!-- Cards -->
+  <div class="cards">
+
+    <!-- Carbo Controle -->
+    <a class="card card-ops" href="https://controle.carbohub.com.br">
+      <div class="icon-box icon-ops">
+        <!-- Settings2 icon -->
+        <svg viewBox="0 0 24 24"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+      </div>
+      <span class="card-title">Carbo Controle</span>
+      <span class="card-sub">Gestão Interna</span>
+      <p class="card-desc">Gestão estratégica, operação e inteligência do ecossistema.</p>
+      <span class="card-cta cta-ops">
+        Acessar
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </span>
+    </a>
+
+    <!-- Área Licenciados -->
+    <a class="card card-lic" href="https://licenciados.carbohub.com.br">
+      <div class="icon-box icon-lic">
+        <!-- Users icon -->
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <span class="card-title">Área Licenciados</span>
+      <span class="card-sub">Portal do Licenciado</span>
+      <p class="card-desc">Pedidos, consumo, performance e crescimento.</p>
+      <span class="card-cta cta-lic">
+        Acessar
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </span>
+    </a>
+
+    <!-- Lojas -->
+    <a class="card card-pdv" href="https://produtos.carbohub.com.br">
+      <div class="icon-box icon-pdv">
+        <!-- Store icon -->
+        <svg viewBox="0 0 24 24"><path d="M3 9l1-5h16l1 5"/><path d="M3 9a2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0 2 2 2 2 0 0 0 2-2"/><path d="M5 21V11"/><path d="M19 21V11"/><rect x="9" y="14" width="6" height="7"/></svg>
+      </div>
+      <span class="card-title">Lojas</span>
+      <span class="card-sub">Portal das Lojas</span>
+      <p class="card-desc">Gestão de estoque, reposição e logística integrada para lojas.</p>
+      <span class="card-cta cta-pdv">
+        Acessar
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </span>
+    </a>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    Ecossistema Grupo Carbo. Gestão integrada. Crescimento sustentável.
+  </footer>
+
+</div>
+
+<script>
+  // ── Theme ──────────────────────────────────────────────────────────
+  const html = document.documentElement;
+  const moonIcon = document.getElementById('icon-moon');
+  const sunIcon  = document.getElementById('icon-sun');
+  const saved = localStorage.getItem('ch-theme');
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    html.dataset.theme = 'dark';
+    moonIcon.style.display = 'none';
+    sunIcon.style.display  = '';
+  }
+  function toggleTheme() {
+    const isDark = html.dataset.theme === 'dark';
+    html.dataset.theme = isDark ? 'light' : 'dark';
+    localStorage.setItem('ch-theme', html.dataset.theme);
+    moonIcon.style.display = isDark ? '' : 'none';
+    sunIcon.style.display  = isDark ? 'none' : '';
+  }
+
+  // ── Particles ──────────────────────────────────────────────────────
+  const container = document.getElementById('particles');
+  const colors = ['#22c55e','#3b82f6','#a3e635','#34d399','#60a5fa'];
+  for (let i = 0; i < 28; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 6 + 3;
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      width:${size}px; height:${size}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${Math.random()*14+8}s;
+      animation-delay:${Math.random()*10}s;
+    `;
+    container.appendChild(p);
+  }
+
+  // ── Count-up ───────────────────────────────────────────────────────
+  const counters = document.querySelectorAll('[data-target]');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(({ target, isIntersecting }) => {
+      if (!isIntersecting) return;
+      const end = +target.dataset.target;
+      const duration = 1000;
+      const step = 16;
+      const increment = end / (duration / step);
+      let current = 0;
+      const timer = setInterval(() => {
+        current = Math.min(current + increment, end);
+        target.textContent = Math.round(current) + '+';
+        if (current >= end) clearInterval(timer);
+      }, step);
+      observer.unobserve(target);
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(c => observer.observe(c));
+
+  // ── Ripple on cards ────────────────────────────────────────────────
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', function(e) {
+      const r = document.createElement('span');
+      r.className = 'ripple';
+      const rect = card.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+      card.appendChild(r);
+      setTimeout(() => r.remove(), 600);
+    });
+  });
+</script>
+</body>
+</html>
